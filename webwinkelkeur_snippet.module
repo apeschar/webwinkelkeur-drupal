@@ -1,0 +1,52 @@
+<?php
+
+function webwinkelkeur_snippet_block_info() {
+    $blocks = array();
+
+    $blocks['rich_snippet'] = array(
+        'info' => t('WebwinkelKeur rich snippet'),
+        'status' => false,
+        'cache'  => -1,
+    );
+    return $blocks;
+}
+
+function webwinkelkeur_snippet_block_view($delta = '') {
+    $shopid = variable_get('webwinkelkeur_shopid', '');
+    if(empty($shopid))
+        return array('subject' => '<none>', 'content' => '<br>');
+
+    $content = &drupal_static(__FUNCTION__);
+    if(!isset($content)) {
+        if($cache = cache_get('webwinkelkeur_snippet_content')) {
+            $content = $cache->data;
+        }
+        else {
+            $content = _webwinkelkeur_snippet_getRichSnippet($shopid);
+            if($content == null) {
+                watchdog('webwinkelkeur', 'webwinkelkeur.nl unreachable', array(), WATCHDOG_WARNING);
+                return array('subject' => '<none>', 'content' => '<br>');
+            }
+            else
+                cache_set('webwinkelkeur_snippet_content', $content, 'cache', time() + 24 * 60 * 60);
+        }
+    }
+    return array('subject' => '<none>', 'content' => $content);
+}
+
+function _webwinkelkeur_snippet_getRichSnippet($shopid) {
+    $url = sprintf('http://www.webwinkelkeur.nl/shop_rich_snippet.php?id=%s', (int) $shopid);
+
+    $context = @stream_context_create(array(
+        'http' => array('timeout' => 3),
+    ));
+    $json = @file_get_contents($url, false, $context);
+    if(!$json) return null;
+
+    $data = json_decode($json, true);
+    if(empty($data) || $data['result'] != 'ok')
+        return null;
+
+    return $data['content'];
+}
+

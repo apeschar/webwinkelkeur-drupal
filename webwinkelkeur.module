@@ -1,0 +1,106 @@
+<?php
+
+function webwinkelkeur_menu() {
+    $items['admin/config/webwinkelkeur'] = array(
+        'title' => 'WebwinkelKeur',
+        'position' => 'left',
+        'weight' => -100,
+        'page callback' => 'system_admin_menu_block_page',
+        'access arguments' => array('access administration pages'),
+        'file' => 'system.admin.inc',
+        'file path' => drupal_get_path('module', 'system'),
+    );
+    $items['admin/config/webwinkelkeur/account'] = array(
+        'title' => 'Account settings',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('webwinkelkeur_account_settings'),
+        'access arguments' => array('administer site configuration'),
+        'weight' => -1,
+    );
+    return $items;
+}
+
+function webwinkelkeur_account_settings() {
+    $form = array();
+
+    $form['account'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Account'),
+    );
+    $form['account']['shopid'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Webshop ID'),
+        '#default_value' => variable_get('webwinkelkeur_shopid', ''),
+    );
+    $form['account']['apikey'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Webshop API key'),
+        '#default_value' => variable_get('webwinkelkeur_apikey', ''),
+    );
+
+    $form['#validate'][] = 'webwinkelkeur_account_settings_validate';
+    $form['#submit'][] = 'webwinkelkeur_account_settings_submit';
+
+    return system_settings_form($form);
+}
+
+function webwinkelkeur_account_settings_validate($form, &$form_state) {
+    if(!preg_match('|^\d*$|', $form_state['values']['shopid']))
+        form_set_error('shopid', t('Webshop ID can contain only numbers.'));
+}
+
+function webwinkelkeur_account_settings_submit($form, &$form_state) {
+    variable_set('webwinkelkeur_shopid', $form_state['values']['shopid']);
+    variable_set('webwinkelkeur_apikey', $form_state['values']['apikey']);
+}
+
+function webwinkelkeur_cron() {
+    $shopid = variable_get('webwinkelkeur_shopid', '');
+    $apikey = variable_get('webwinkelkeur_apikey', '');
+    if(empty($shopid) || empty($apikey))
+        return;
+
+    foreach(module_implements('webwinkelkeur_invites') as $module) {
+        $orders = module_invoke($module, 'webwinkelkeur_invites');
+
+        if($orders->rowCount() == 0)
+            continue;
+
+        $invite_type = variable_get('webwinkelkeur_invite_type', 1);
+        $invite_delay = (int) variable_get('webwinkelkeur_invite_delay', 0);
+
+        $responses = array();
+
+        foreach($orders as $order) {
+            $parameters = array(
+                'id'        => $shopid,
+                'password'  => $apikey,
+                'email'     => $order->mail,
+                'order'     => $order->order_id,
+                'delay'     => $invite_delay,
+            );
+
+            if($invite_type == 2)
+                $parameters['noremail'] = '1';
+
+            $url = 'http://www.webwinkelkeur.nl/api.php?' . http_build_query($parameters);
+            $r = @file_get_contents($url);
+
+            $sent = false;
+
+            if(preg_match('|^Success:|', $r) || preg_match('|invite already sent|', $r)) {
+                $sent = true;
+            }
+            else {
+                watchdog('webwinkelkeur', "%response<br>\n(%url)", array(
+                    '%url' => $url, '%response' => $r
+                ));
+            }
+            $responses[] = array('id' => $order->order_id, 'sent' => $sent);
+        }
+
+        $fn = $module . '_webwinkelkeur_invites_update';
+        $fn($responses);
+    }
+}
+

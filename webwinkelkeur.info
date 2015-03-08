@@ -1,0 +1,5 @@
+name = WebwinkelKeur Core
+description = Core module required by other WebwinkelKeur modules.
+core = 7.x
+package = WebwinkelKeur
+files[] = webwinkelkeur.module

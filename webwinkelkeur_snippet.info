@@ -1,0 +1,6 @@
+name = WebwinkelKeur Snippet
+description = Enhances site relevance with structured data.
+core = 7.x
+package = WebwinkelKeur
+files[] = webwinkelkeur_snippet.module
+dependencies[] = webwinkelkeur

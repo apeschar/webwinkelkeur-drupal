@@ -1,0 +1,43 @@
+<?php
+
+function webwinkelkeur_commerce_menu() {
+    $items['admin/config/webwinkelkeur/invites'] = array(
+        'title' => 'Drupal Commerce invites settings',
+        'description' => 'Changes how invitations are sent to customers.',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('webwinkelkeur_invites_settings'),
+        'access arguments' => array('administer site configuration'),
+        'file' => 'webwinkelkeur.invite.inc',
+    );
+    return $items;
+}
+
+function webwinkelkeur_commerce_webwinkelkeur_invites() {
+    $query = '
+        SELECT order_id, mail
+        FROM {commerce_order}
+        WHERE webwinkelkeur_invite_sent = 0
+            AND webwinkelkeur_invite_tries < 10
+            AND webwinkelkeur_invite_time < :wwk_time
+    ';
+
+    return db_query($query, array('wwk_time' => time() - 1800));
+}
+
+function webwinkelkeur_commerce_webwinkelkeur_invites_update($orders) {
+    foreach($orders as $order) {
+        db_update('commerce_order')
+            ->fields(array('webwinkelkeur_invite_time' => time()))
+            ->expression('webwinkelkeur_invite_tries', 'webwinkelkeur_invite_tries + 1')
+            ->condition('order_id', $order['id'])
+            ->execute()
+        ;
+        if($order['sent'])
+            db_update('commerce_order')
+                ->fields(array('webwinkelkeur_invite_sent' => 1))
+                ->condition('order_id', $order['id'])
+                ->execute()
+            ;
+    }
+}
+

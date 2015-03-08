@@ -1,0 +1,48 @@
+<?php
+
+function webwinkelkeur_ubercart_schema_alter(&$schema) {
+    $schema['uc_orders']['fields']['webwinkelkeur_invite_sent'] = array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'initial' => 1,
+    );
+    $schema['uc_orders']['fields']['webwinkelkeur_invite_tries'] = array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+    );
+    $schema['uc_orders']['fields']['webwinkelkeur_invite_time'] = array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+    );
+
+    $schema['uc_orders']['indexes']['webwinkelkeur_invites'] = array(
+        'webwinkelkeur_invite_sent', 'webwinkelkeur_invite_tries'
+    );
+}
+
+function webwinkelkeur_ubercart_install() {
+    $schema = drupal_get_schema('uc_orders');
+
+    db_add_field('uc_orders', 'webwinkelkeur_invite_sent',
+        $schema['fields']['webwinkelkeur_invite_sent']);
+    db_add_field('uc_orders', 'webwinkelkeur_invite_tries',
+        $schema['fields']['webwinkelkeur_invite_tries']);
+    db_add_field('uc_orders', 'webwinkelkeur_invite_time',
+        $schema['fields']['webwinkelkeur_invite_time']);
+
+    db_add_index('uc_orders', 'webwinkelkeur_invites',
+        $schema['indexes']['webwinkelkeur_invites']);
+}
+
+function webwinkelkeur_ubercart_uninstall() {
+    db_drop_field('uc_orders', 'webwinkelkeur_invite_sent');
+    db_drop_field('uc_orders', 'webwinkelkeur_invite_tries');
+    db_drop_field('uc_orders', 'webwinkelkeur_invite_time');
+
+    db_drop_index('uc_orders', 'webwinkelkeur_invites');
+}
+

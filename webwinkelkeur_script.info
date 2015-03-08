@@ -1,0 +1,7 @@
+name = WebwinkelKeur Script
+description = Displays webstore ratings and reviews.
+core = 7.x
+package = WebwinkelKeur
+files[] = webwinkelkeur_script.module
+dependencies[] = webwinkelkeur
+configure = admin/config/webwinkelkeur/script

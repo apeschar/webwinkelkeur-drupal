@@ -1,0 +1,21 @@
+<?php
+
+function webwinkelkeur_requirements($phase) {
+    $requirements = array();
+
+    if($phase == 'runtime') {
+        $shopid = variable_get('webwinkelkeur_shopid', '');
+        $apikey = variable_get('webwinkelkeur_apikey', '');
+
+        if(empty($shopid) || empty($apikey)) {
+            $requirements[] = array(
+                'severity' => REQUIREMENT_ERROR,
+                'title' => t('WebwinkelKeur account information'),
+                'description' => t('Please enter your WebwinkelKeur account ID and API key.'),
+                'value' => t('Missing'),
+            );
+        }
+    }
+    return $requirements;
+}
+
