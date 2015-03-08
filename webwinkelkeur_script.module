@@ -83,7 +83,7 @@ function webwinkelkeur_script_page_alter(&$page) {
         'type' => 'inline', 'scope' => 'footer'
     ));
     drupal_add_js('http://www.webwinkelkeur.nl/js/sidebar.js', array(
-        'type' => 'external', 'scope' => 'footer',
+        'type' => 'external', 'scope' => 'footer', 'async_js' => TRUE
     ));
 }
 

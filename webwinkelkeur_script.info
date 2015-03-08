@@ -4,4 +4,5 @@ core = 7.x
 package = WebwinkelKeur
 files[] = webwinkelkeur_script.module
 dependencies[] = webwinkelkeur
+dependencies[] = async_js
 configure = admin/config/webwinkelkeur/script
