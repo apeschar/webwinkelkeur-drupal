@@ -55,6 +55,8 @@ function webwinkelkeur_account_settings_submit($form, &$form_state) {
 }
 
 function webwinkelkeur_cron() {
+    global $language;
+
     $shopid = variable_get('webwinkelkeur_shopid', '');
     $apikey = variable_get('webwinkelkeur_apikey', '');
     if(empty($shopid) || empty($apikey))
@@ -78,6 +80,8 @@ function webwinkelkeur_cron() {
                 'email'     => $order->mail,
                 'order'     => $order->order_id,
                 'delay'     => $invite_delay,
+                'language'  => $language->language,
+                'platform'  => 'drupal-' . VERSION,
             );
 
             if($invite_type == 2)
