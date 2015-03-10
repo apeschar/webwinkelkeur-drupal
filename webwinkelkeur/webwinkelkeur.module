@@ -45,13 +45,13 @@ function webwinkelkeur_account_settings() {
 }
 
 function webwinkelkeur_account_settings_validate($form, &$form_state) {
-    if(!preg_match('|^\d*$|', $form_state['values']['shopid']))
+    if(!preg_match('|^\d*$|', trim($form_state['values']['shopid'])))
         form_set_error('shopid', t('Webshop ID can contain only numbers.'));
 }
 
 function webwinkelkeur_account_settings_submit($form, &$form_state) {
-    variable_set('webwinkelkeur_shopid', $form_state['values']['shopid']);
-    variable_set('webwinkelkeur_apikey', $form_state['values']['apikey']);
+    variable_set('webwinkelkeur_shopid', trim($form_state['values']['shopid']));
+    variable_set('webwinkelkeur_apikey', trim($form_state['values']['apikey']));
 }
 
 function webwinkelkeur_cron() {
