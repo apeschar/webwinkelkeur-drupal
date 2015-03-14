@@ -1,0 +1,18 @@
+#!/bin/bash
+set -eu
+
+if [[ $# -ne 1 ]]; then
+    echo "Usage: $0 <path>" >&2
+    exit 1
+fi
+
+path="$1"
+modules="$1/sites/all/modules"
+
+if [[ ! -d "$modules" ]]; then
+    echo "No such directory: $modules" >&2
+    exit 1
+fi
+
+mkdir -p "$modules/webwinkelkeur"
+stow --no-folding -d $(dirname "$0")/../webwinkelkeur -t "$modules/webwinkelkeur" .

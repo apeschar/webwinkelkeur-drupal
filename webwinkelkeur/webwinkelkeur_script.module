@@ -68,16 +68,16 @@ function webwinkelkeur_script_page_alter(&$page) {
     if(!$sidebar && !$tooltip)
         return;
 
-    $js_vars = sprintf("_webwinkelkeur_id=%d\n", $shopid)
-             . sprintf("_webwinkelkeur_sidebar=%s\n", $sidebar)
-             . sprintf("_webwinkelkeur_tooltip=%s\n", $tooltip);
+    $js_vars = sprintf("_webwinkelkeur_id=%d;\n", $shopid)
+             . sprintf("_webwinkelkeur_sidebar=%s;\n", $sidebar ? 'true' : 'false')
+             . sprintf("_webwinkelkeur_tooltip=%s;\n", $tooltip ? 'true' : 'false');
 
     $voffset  = variable_get('webwinkelkeur_sidebar_top', '');
     if(!empty($voffset))
-        $js_vars .= sprintf("_webwinkelkeur_sidebar_top=\"%s\"\n", $voffset);
+        $js_vars .= sprintf("_webwinkelkeur_sidebar_top=%s;\n", json_encode($voffset));
 
     $position = variable_get('webwinkelkeur_sidebar_position', 1) ? 'right' : 'left';
-    $js_vars .= sprintf('_webwinkelkeur_sidebar_position="%s"', $position);
+    $js_vars .= sprintf('_webwinkelkeur_sidebar_position="%s";', $position);
 
     drupal_add_js($js_vars, array(
         'type' => 'inline', 'scope' => 'footer'
