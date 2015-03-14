@@ -3,6 +3,7 @@
 function webwinkelkeur_script_menu() {
     $items['admin/config/webwinkelkeur/script'] = array(
         'title' => 'Script settings',
+        'description' => 'Presents site ratings to visitors.',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('webwinkelkeur_script_settings'),
         'access arguments' => array('administer site configuration'),

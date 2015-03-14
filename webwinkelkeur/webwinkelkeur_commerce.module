@@ -2,7 +2,7 @@
 
 function webwinkelkeur_commerce_menu() {
     $items['admin/config/webwinkelkeur/invites'] = array(
-        'title' => 'Drupal Commerce invites settings',
+        'title' => 'Drupal Commerce invitation settings',
         'description' => 'Changes how invitations are sent to customers.',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('webwinkelkeur_invites_settings'),

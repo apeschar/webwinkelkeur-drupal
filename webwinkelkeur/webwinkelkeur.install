@@ -12,7 +12,7 @@ function webwinkelkeur_requirements($phase) {
                 'severity' => REQUIREMENT_ERROR,
                 'title' => t('WebwinkelKeur account information'),
                 'description' => t('Please enter your WebwinkelKeur account ID and API key.'),
-                'value' => t('Missing'),
+                'value' => t('Missing') . ' ' . l(t('account info'), 'admin/config/webwinkelkeur/account')
             );
         }
     }
