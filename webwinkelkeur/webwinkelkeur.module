@@ -12,6 +12,7 @@ function webwinkelkeur_menu() {
     );
     $items['admin/config/webwinkelkeur/account'] = array(
         'title' => 'Account settings',
+        'description' => 'Configures WebwinkelKeur account details.',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('webwinkelkeur_account_settings'),
         'access arguments' => array('administer site configuration'),

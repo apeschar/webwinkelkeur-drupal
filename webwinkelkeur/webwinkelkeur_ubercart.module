@@ -2,7 +2,7 @@
 
 function webwinkelkeur_ubercart_menu() {
     $items['admin/config/webwinkelkeur/invites'] = array(
-        'title' => 'Ubercart invites settings',
+        'title' => 'Übercart invitation settings',
         'description' => 'Changes how invitations are sent to customers.',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('webwinkelkeur_invites_settings'),
@@ -20,6 +20,9 @@ function webwinkelkeur_ubercart_webwinkelkeur_invites() {
             AND webwinkelkeur_invite_tries < 10
             AND webwinkelkeur_invite_time < :wwk_time
     ';
+
+    if(variable_get('webwinkelkeur_invite_completed_only', true))
+        $query .= "AND order_status = 'completed'";
 
     return db_query($query, array('wwk_time' => time() - 1800));
 }

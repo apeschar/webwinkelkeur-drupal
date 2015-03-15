@@ -4,5 +4,5 @@ core = 7.x
 package = WebwinkelKeur
 files[] = webwinkelkeur_ubercart.module
 dependencies[] = webwinkelkeur
-dependencies[] = uc_order (=7.x-3.6)
+dependencies[] = uc_order (>=7.x-3.6)
 configure = admin/config/webwinkelkeur/invites
