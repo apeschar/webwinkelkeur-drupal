@@ -5,7 +5,7 @@ Deze module voegt de sidebar en tooltip toe aan en Drupal 7.x installatie.
 Tevens biedt de module de mogelijkheid om uitnodigingen te versturen wanneer er
 orders worden geplaatst in uw Drupal Commerce of Übercart shop.
 
-Ondervindt u problemen bij de installatie of het gebruik van de module, dan kun
+Ondervindt u problemen bij de installatie of het gebruik van de module, dan kunt
 u contact opnemen met Albert Peschar <albert@peschar.net>.
 
 
