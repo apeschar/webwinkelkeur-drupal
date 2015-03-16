@@ -1,0 +1,219 @@
+# $Id$
+#
+# Dutch translation of Drupal (general)
+# Copyright Albert Peschar <albert@peschar.net>
+# Generated from files:
+#  webwinkelkeur.invite.inc: n/a
+#  webwinkelkeur.module: n/a
+#  webwinkelkeur_snippet.module: n/a
+#  webwinkelkeur.info: n/a
+#  webwinkelkeur_commerce.info: n/a
+#  webwinkelkeur_script.info: n/a
+#  webwinkelkeur_snippet.info: n/a
+#  webwinkelkeur_ubercart.info: n/a
+#  webwinkelkeur_commerce.module: n/a
+#  webwinkelkeur_ubercart.module: n/a
+#  webwinkelkeur_script.module: n/a
+#  webwinkelkeur.install: n/a
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2015-03-16 07:09+0100\n"
+"PO-Revision-Date: 2015-03-16 07:12+0100\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Dutch <EMAIL@ADDRESS>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.7.5\n"
+
+#: webwinkelkeur.invite.inc:8
+msgid "Invitations"
+msgstr "Uitnodigingen"
+
+#: webwinkelkeur.invite.inc:12
+msgid "Send invites only for <em>completed</em> orders"
+msgstr ""
+"Stuur de uitnodig pas wanneer een bestelling op <em>Completed</em> staat"
+
+#: webwinkelkeur.invite.inc:18
+msgid "each order"
+msgstr "elke bestelling"
+
+#: webwinkelkeur.invite.inc:19
+msgid "first order only"
+msgstr "alleen eerste bestelling"
+
+#: webwinkelkeur.invite.inc:24
+msgid "Send invitations on"
+msgstr "Uitnodigingen verzenden bij"
+
+#: webwinkelkeur.invite.inc:30
+msgid "Invitation delay"
+msgstr "Wachttijd uitnodiging"
+
+#: webwinkelkeur.module:29
+msgid "Account"
+msgstr "Account"
+
+#: webwinkelkeur.module:33
+msgid "Webshop ID"
+msgstr "Webshop ID"
+
+#: webwinkelkeur.module:38
+msgid "Webshop API key"
+msgstr "Webshop API sleutel"
+
+#: webwinkelkeur.module:50
+msgid "Webshop ID can contain only numbers."
+msgstr "Webshop ID kan alleen nummers bevatten."
+
+#: webwinkelkeur.module:100 webwinkelkeur_snippet.module:27
+msgid "webwinkelkeur"
+msgstr "webwinkelkeur"
+
+#: webwinkelkeur.module:100
+msgid ""
+"%response<br>\n"
+"(%url)"
+msgstr ""
+"%response<br>\n"
+"(%url)"
+
+#: webwinkelkeur.module:5 webwinkelkeur.info:0 webwinkelkeur_commerce.info:0
+#: webwinkelkeur_script.info:0 webwinkelkeur_snippet.info:0
+#: webwinkelkeur_ubercart.info:0
+msgid "WebwinkelKeur"
+msgstr "WebwinkelKeur"
+
+#: webwinkelkeur.module:14
+msgid "Account settings"
+msgstr "Accountinstellingen"
+
+#: webwinkelkeur.module:15
+msgid "Configures WebwinkelKeur account details."
+msgstr "Voeg uw WebwinkelKeur accountdetails toe."
+
+#: webwinkelkeur_commerce.module:5
+msgid "Drupal Commerce invitation settings"
+msgstr "Uitnodigingen voor Drupal Commerce"
+
+#: webwinkelkeur_commerce.module:6 webwinkelkeur_ubercart.module:6
+msgid "Changes how invitations are sent to customers."
+msgstr "Bepaalt hoe uitnodigingen naar klanten worden verstuurd."
+
+#: webwinkelkeur_script.module:19
+msgid "Script"
+msgstr "Sidebar en tooltip (JavaScript)"
+
+#: webwinkelkeur_script.module:23
+msgid "Show tooltips"
+msgstr "Tooltip activeren"
+
+#: webwinkelkeur_script.module:28
+msgid "Show sidebar"
+msgstr "Sidebar activeren"
+
+#: webwinkelkeur_script.module:33
+msgid "Left"
+msgstr "Links"
+
+#: webwinkelkeur_script.module:33
+msgid "Right"
+msgstr "Rechts"
+
+#: webwinkelkeur_script.module:37
+msgid "Sidebar side"
+msgstr "Sidebar plaatsing"
+
+#: webwinkelkeur_script.module:43
+msgid "Sidebar position (in pixels)"
+msgstr "Sidebar positie (vanaf boven)"
+
+#: webwinkelkeur_script.module:5
+msgid "Script settings"
+msgstr "Scriptinstellingen"
+
+#: webwinkelkeur_script.module:6
+msgid "Presents site ratings to visitors."
+msgstr "Toon de sidebar en tooltip aan bezoekers."
+
+#: webwinkelkeur_snippet.module:7
+msgid "WebwinkelKeur rich snippet"
+msgstr "WebwinkelKeur rich snippet"
+
+#: webwinkelkeur_snippet.module:27
+msgid "webwinkelkeur.nl unreachable"
+msgstr "webwinkelkeur.nl onbereikbaar"
+
+#: webwinkelkeur_ubercart.module:5
+msgid "Übercart invitation settings"
+msgstr "Uitnodigingen voor Übercart"
+
+#: webwinkelkeur.install:13
+msgid "WebwinkelKeur account information"
+msgstr "WebwinkelKeur accountinformatie"
+
+#: webwinkelkeur.install:14
+msgid "Please enter your WebwinkelKeur account ID and API key."
+msgstr "Vul uw WebwinkelKeur ID-nummer en API sleutel in"
+
+#: webwinkelkeur.install:15
+msgid "Missing"
+msgstr "Ontbreekend"
+
+#: webwinkelkeur.install:15
+msgid "account info"
+msgstr "accountinstellingen"
+
+#: webwinkelkeur.info:0
+msgid "WebwinkelKeur Core"
+msgstr "WebwinkelKeur Core"
+
+#: webwinkelkeur.info:0
+msgid "Core module required by other WebwinkelKeur modules."
+msgstr "Modules die zijn vereist voor de andere WebwinkelKeur modules."
+
+#: webwinkelkeur_commerce.info:0
+msgid "WebwinkelKeur Commerce"
+msgstr "WebwinkelKeur voor Drupal Commerce"
+
+#: webwinkelkeur_commerce.info:0
+msgid ""
+"Sends invites to customers after placing an order in Drupal Commerce store."
+msgstr "Stuur een uitnodiging na het plaatsen van een bestelling."
+
+#: webwinkelkeur_script.info:0
+msgid "WebwinkelKeur Script"
+msgstr "WebwinkelKeur JavaScript"
+
+#: webwinkelkeur_script.info:0
+msgid "Displays webstore ratings and reviews."
+msgstr "Toon de sidebar en de tooltip."
+
+#: webwinkelkeur_snippet.info:0
+msgid "WebwinkelKeur Snippet"
+msgstr "WebwinkelKeur RIch Snippet"
+
+#: webwinkelkeur_snippet.info:0
+msgid "Enhances site relevance with structured data."
+msgstr ""
+"Verbeter uw plaatsing in Google met gestructeerde data. (Let op: gebruik op "
+"eigen risico.)"
+
+#: webwinkelkeur_ubercart.info:0
+msgid "WebwinkelKeur Ubercart"
+msgstr "WebwinkelKeur voor Übercart"
+
+#: webwinkelkeur_ubercart.info:0
+msgid "Sends invites to customers after placing an order in Ubercart store."
+msgstr "Stuur een uitnodiging na het plaatsen van een bestelling."
+
+#~ msgid "Drupal Commerce invites settings"
+#~ msgstr "Uitnodigingen voor Drupal Commerce"
+
+#~ msgid "Ubercart invites settings"
+#~ msgstr "Uitnodigingen voor Übercart"
