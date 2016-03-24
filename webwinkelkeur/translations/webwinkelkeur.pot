@@ -102,27 +102,11 @@ msgid "Script"
 msgstr ""
 
 #: webwinkelkeur_script.module:23
-msgid "Show tooltips"
+msgid "Enable Javascript integration"
 msgstr ""
 
-#: webwinkelkeur_script.module:28
-msgid "Show sidebar"
-msgstr ""
-
-#: webwinkelkeur_script.module:33
-msgid "Left"
-msgstr ""
-
-#: webwinkelkeur_script.module:33
-msgid "Right"
-msgstr ""
-
-#: webwinkelkeur_script.module:37
-msgid "Sidebar side"
-msgstr ""
-
-#: webwinkelkeur_script.module:43
-msgid "Sidebar position (in pixels)"
+#: webwinkelkeur_script.module:25
+msgid "Use the JavaScript integration to display the sidebar and tooltip on your website. You can configure these features through the <a href='https://dashboard.webwinkelkeur.nl/integration' target='_blank'>WebwinkelKeur Dashboard</a>."
 msgstr ""
 
 #: webwinkelkeur_script.module:5

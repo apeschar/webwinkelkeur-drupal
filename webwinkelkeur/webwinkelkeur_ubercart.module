@@ -14,7 +14,7 @@ function webwinkelkeur_ubercart_menu() {
 
 function webwinkelkeur_ubercart_webwinkelkeur_invites() {
     $query = '
-        SELECT order_id, primary_email as mail
+        SELECT order_id, primary_email as mail, CONCAT(billing_first_name, \' \', billing_last_name) as customername
         FROM {uc_orders}
         WHERE webwinkelkeur_invite_sent = 0
             AND webwinkelkeur_invite_tries < 10

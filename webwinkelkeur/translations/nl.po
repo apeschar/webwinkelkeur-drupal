@@ -110,28 +110,12 @@ msgid "Script"
 msgstr "Sidebar en tooltip (JavaScript)"
 
 #: webwinkelkeur_script.module:23
-msgid "Show tooltips"
-msgstr "Tooltip activeren"
+msgid "Enable Javascript integration"
+msgstr "JavaScript-integratie"
 
-#: webwinkelkeur_script.module:28
-msgid "Show sidebar"
-msgstr "Sidebar activeren"
-
-#: webwinkelkeur_script.module:33
-msgid "Left"
-msgstr "Links"
-
-#: webwinkelkeur_script.module:33
-msgid "Right"
-msgstr "Rechts"
-
-#: webwinkelkeur_script.module:37
-msgid "Sidebar side"
-msgstr "Sidebar plaatsing"
-
-#: webwinkelkeur_script.module:43
-msgid "Sidebar position (in pixels)"
-msgstr "Sidebar positie (vanaf boven)"
+#: webwinkelkeur_script.module:25
+msgid "Use the JavaScript integration to display the sidebar and tooltip on your website. You can configure these features through the <a href='https://dashboard.webwinkelkeur.nl/integration' target='_blank'>WebwinkelKeur Dashboard</a>."
+msgstr "Gebruik de JavaScript-integratie om de sidebar en de tooltip op je site te plaatsen. Alle instellingen voor de sidebar en de tooltip, vind je in het <a href='https://dashboard.webwinkelkeur.nl/integration' target='_blank'>WebwinkelKeur Dashboard</a>."
 
 #: webwinkelkeur_script.module:5
 msgid "Script settings"

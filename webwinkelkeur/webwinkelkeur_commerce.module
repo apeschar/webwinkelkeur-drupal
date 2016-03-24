@@ -14,15 +14,20 @@ function webwinkelkeur_commerce_menu() {
 
 function webwinkelkeur_commerce_webwinkelkeur_invites() {
     $query = '
-        SELECT order_id, mail
-        FROM {commerce_order}
-        WHERE webwinkelkeur_invite_sent = 0
-            AND webwinkelkeur_invite_tries < 10
-            AND webwinkelkeur_invite_time < :wwk_time
+        SELECT o.order_id, o.mail, a.commerce_customer_address_name_line as customername
+        FROM {commerce_order} o
+        LEFT JOIN {field_data_commerce_customer_address} a ON o.order_id = a.entity_id
+            AND a.entity_type = \'commerce_customer_profile\'
+            AND a.deleted = 0
+        WHERE o.webwinkelkeur_invite_sent = 0
+            AND o.webwinkelkeur_invite_tries < 10
+            AND o.webwinkelkeur_invite_time < :wwk_time
     ';
 
     if(variable_get('webwinkelkeur_invite_completed_only', true))
-        $query .= "AND status = 'completed'";
+        $query .= "AND o.status = 'completed'";
+
+    $query .= ' GROUP BY o.order_id';
 
     return db_query($query, array('wwk_time' => time() - 1800));
 }

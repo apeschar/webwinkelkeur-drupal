@@ -18,30 +18,11 @@ function webwinkelkeur_script_settings() {
         '#type' => 'fieldset',
         '#title' => t('Script'),
     );
-    $form['script']['tooltip_enabled'] = array(
+    $form['script']['javascript_enabled'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Show tooltips'),
-        '#default_value' => variable_get('webwinkelkeur_tooltip', false),
-    );
-    $form['script']['sidebar_enabled'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Show sidebar'),
-        '#default_value' => variable_get('webwinkelkeur_sidebar', true),
-    );
-    $form['sidebar_position_options'] = array(
-        '#type' => 'value',
-        '#value' => array(t('Left'), t('Right')),
-    );
-    $form['script']['sidebar_position'] = array(
-        '#type' => 'radios',
-        '#title' => t('Sidebar side'),
-        '#options' => $form['sidebar_position_options']['#value'],
-        '#default_value' => variable_get('webwinkelkeur_sidebar_position', 0),
-    );
-    $form['script']['sidebar_top'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Sidebar position (in pixels)'),
-        '#default_value' => variable_get('webwinkelkeur_sidebar_top', ''),
+        '#title' => t('Enable Javascript integration'),
+        '#default_value' => variable_get('webwinkelkeur_javascript', false),
+        '#description' => t("Use the JavaScript integration to display the sidebar and tooltip on your website. You can configure these features through the <a href='https://dashboard.webwinkelkeur.nl/integration' target='_blank'>WebwinkelKeur Dashboard</a>."),
     );
 
     $form['#submit'][] = 'webwinkelkeur_script_settings_submit';
@@ -50,10 +31,7 @@ function webwinkelkeur_script_settings() {
 }
 
 function webwinkelkeur_script_settings_submit($form, &$form_state) {
-    variable_set('webwinkelkeur_tooltip', $form_state['values']['tooltip_enabled']);
-    variable_set('webwinkelkeur_sidebar', $form_state['values']['sidebar_enabled']);
-    variable_set('webwinkelkeur_sidebar_top', $form_state['values']['sidebar_top']);
-    variable_set('webwinkelkeur_sidebar_position', $form_state['values']['sidebar_position']);
+    variable_set('webwinkelkeur_javascript', $form_state['values']['javascript_enabled']);
 }
 
 function webwinkelkeur_script_page_alter(&$page) {
@@ -64,21 +42,11 @@ function webwinkelkeur_script_page_alter(&$page) {
     if(empty($shopid))
         return;
 
-    $sidebar = variable_get('webwinkelkeur_sidebar', false);
-    $tooltip = variable_get('webwinkelkeur_tooltip', false);
-    if(!$sidebar && !$tooltip)
+    $javascript = variable_get('webwinkelkeur_javascript', false);
+    if(!$javascript)
         return;
 
-    $js_vars = sprintf("_webwinkelkeur_id=%d;\n", $shopid)
-             . sprintf("_webwinkelkeur_sidebar=%s;\n", $sidebar ? 'true' : 'false')
-             . sprintf("_webwinkelkeur_tooltip=%s;\n", $tooltip ? 'true' : 'false');
-
-    $voffset  = variable_get('webwinkelkeur_sidebar_top', '');
-    if(!empty($voffset))
-        $js_vars .= sprintf("_webwinkelkeur_sidebar_top=%s;\n", json_encode($voffset));
-
-    $position = variable_get('webwinkelkeur_sidebar_position', 1) ? 'right' : 'left';
-    $js_vars .= sprintf('_webwinkelkeur_sidebar_position="%s";', $position);
+    $js_vars = sprintf("_webwinkelkeur_id=%d;\n", $shopid);
 
     drupal_add_js($js_vars, array(
         'type' => 'inline', 'scope' => 'footer'

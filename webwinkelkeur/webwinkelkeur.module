@@ -81,8 +81,9 @@ function webwinkelkeur_cron() {
                 'email'     => $order->mail,
                 'order'     => $order->order_id,
                 'delay'     => $invite_delay,
-                'language'  => $language->language,
-                'platform'  => 'drupal-' . VERSION,
+                'lang'      => $language->language,
+                'customername' => $order->customername,
+                'client'    => 'drupal-' . VERSION,
             );
 
             if($invite_type == 2)
