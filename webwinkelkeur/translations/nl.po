@@ -115,7 +115,7 @@ msgstr "JavaScript-integratie"
 
 #: webwinkelkeur_script.module:25
 msgid "Use the JavaScript integration to display the sidebar and tooltip on your website. You can configure these features through the <a href='https://dashboard.webwinkelkeur.nl/integration' target='_blank'>WebwinkelKeur Dashboard</a>."
-msgstr "Gebruik de JavaScript-integratie om de sidebar en de tooltip op je site te plaatsen. Alle instellingen voor de sidebar en de tooltip, vind je in het <a href='https://dashboard.webwinkelkeur.nl/integration' target='_blank'>WebwinkelKeur Dashboard</a>."
+msgstr "Gebruik de JavaScript-integratie om de sidebar en de tooltip op uw site te plaatsen. Alle instellingen voor de sidebar en de tooltip, vindt u in het <a href='https://dashboard.webwinkelkeur.nl/integration' target='_blank'>WebwinkelKeur Dashboard</a>."
 
 #: webwinkelkeur_script.module:5
 msgid "Script settings"
