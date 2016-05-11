@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+scp dist/webwinkelkeur-7.x-latest.zip wwk16@atlas:public_html/download/modules/
