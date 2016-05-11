@@ -4,5 +4,5 @@ core = 7.x
 package = WebwinkelKeur
 files[] = webwinkelkeur_commerce.module
 dependencies[] = webwinkelkeur
-dependencies[] = commerce (=7.x-1.11)
+dependencies[] = commerce (>=7.x-1.11)
 configure = admin/config/webwinkelkeur/invites
