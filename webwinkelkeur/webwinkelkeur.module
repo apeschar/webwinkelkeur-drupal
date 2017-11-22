@@ -73,6 +73,7 @@ function webwinkelkeur_cron() {
 
         $invite_type = variable_get('webwinkelkeur_invite_type', 1);
         $invite_delay = (int) variable_get('webwinkelkeur_invite_delay', 0);
+        $with_order_data = !variable_get('limit_order_data', false);
 
         $responses = array();
 
@@ -94,12 +95,15 @@ function webwinkelkeur_cron() {
                 'platform_version' => 'd-' . VERSION
                     . '-' . module_invoke($module, 'webwinkelkeur_get_platform_version'),
                 'plugin_version' => $plugin_version_info['version'],
-
-                'order_data' => json_encode(module_invoke($module, 'webwinkelkeur_get_order_data', $order))
             );
 
-            if($invite_type == 2)
+            if($invite_type == 2) {
                 $post['max_invitations_per_email'] = '1';
+            }
+            if ($with_order_data) {
+                $post['order_data'] = json_encode(module_invoke($module, 'webwinkelkeur_get_order_data', $order));
+            }
+
 
             $url = 'https://dashboard.webwinkelkeur.nl/api/1.0/invitations.json?' . http_build_query($parameters);
             $ch = curl_init($url);

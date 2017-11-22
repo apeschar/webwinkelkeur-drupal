@@ -25,6 +25,12 @@ function webwinkelkeur_invites_settings() {
         '#options' => $form['invites_options']['#value'],
         '#default_value' => variable_get('webwinkelkeur_invite_type', 1),
     );
+    $form['invites']['limit_order_data'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Do not send order information to WebwinkelKeur.'),
+        '#description' => t('<p>Please note: not all WebwinkelKeur functionality will be available if you check this option!</p>'),
+        '#default_value' => variable_get('webwinkelkeur_limit_order_data', false),
+    );
     $form['invites']['invite_delay'] = array(
         '#type' => 'textfield',
         '#title' => t('Invitation delay'),
@@ -39,7 +45,7 @@ function webwinkelkeur_invites_settings() {
 function webwinkelkeur_invite_settings_submit($form, &$form_state) {
     variable_set('webwinkelkeur_invite_type', $form_state['values']['invite_type']);
     variable_set('webwinkelkeur_invite_delay', $form_state['values']['invite_delay']);
-    variable_set('webwinkelkeur_invite_completed_only',
-        $form_state['values']['invites_completed_only']);
+    variable_set('webwinkelkeur_invite_completed_only', $form_state['values']['invites_completed_only']);
+    variable_set('webwinkelkeur_limit_order_data', $form_state['values']['limit_order_data']);
 }
 
