@@ -66,3 +66,69 @@ function webwinkelkeur_ubercart_webwinkelkeur_get_order_phone_numbers($order) {
     return array_unique(array_filter(array($order->billing_phone, $order->delivery_phone)));
 }
 
+function webwinkelkeur_ubercart_webwinkelkeur_get_order_data($order) {
+    $order_info = clone $order;
+    $order_info->order_lines = array();
+
+    $order_products = 'SELECT * FROM {uc_order_products} WHERE order_id = :id';
+    $order_products = db_query($order_products, array('id' => $order->order_id));
+    $product_node_ids = array();
+    foreach ($order_products as $product) {
+        $order_info->order_lines[] = $product;
+        $product_node_ids[] = $product->nid;
+    }
+
+    $order_lines_query = 'SELECT * FROM {uc_order_line_items} WHERE order_id = :id';
+    $order_lines = db_query($order_lines_query, array('id' => $order->order_id));
+    foreach ($order_lines as $item) {
+        $order_info->order_lines[] = $item;
+    }
+
+    $products = [];
+    foreach ($product_node_ids as $node_id) {
+        $node = node_load($node_id);
+        $node->image_urls = [];
+
+        $images_arr = isset ($node->uc_product_image[$node->language])
+            ? $node->uc_product_image[$node->language] : $node->uc_product_image;
+        foreach ($images_arr as $image) {
+            $node->image_urls[] = file_create_url($image['uri']);
+        }
+        $products[] = $node;
+    }
+
+    $customer = user_load($order->uid);
+    unset ($customer->pass);
+
+    $order_data = [
+        'order' => $order_info,
+        'products' => $products,
+        'customer' => $customer,
+        'invoice_address' => [],
+        'delivery_address' => []
+    ];
+
+    $addresses = array(
+        'invoice_address'  => 'billing_',
+        'delivery_address' => 'delivery_'
+    );
+    foreach ($addresses as $addr_type => $prefix) {
+        foreach ($order as $prop => $value) {
+            if (strpos($prop, $prefix) === 0) {
+                $order_data[$addr_type][str_replace($prefix, '', $prop)] = $value;
+            }
+        }
+    }
+
+    if (function_exists('uc_country_get_by_id')) {
+        $order_data['invoice_address']['country'] = uc_country_get_by_id($order_data['invoice_address']['country']);
+        $order_data['delivery_address']['country'] = uc_country_get_by_id($order_data['delivery_address']['country']);
+    }
+    if (function_exists('uc_zone_get_by_id')) {
+        $order_data['invoice_address']['country'] = uc_zone_get_by_id($order_data['invoice_address']['zone']);
+        $order_data['delivery_address']['country'] = uc_zone_get_by_id($order_data['delivery_address']['zone']);
+    }
+
+    return $order_data;
+
+}
