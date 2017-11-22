@@ -95,7 +95,7 @@ function webwinkelkeur_cron() {
                     . '-' . module_invoke($module, 'webwinkelkeur_get_platform_version'),
                 'plugin_version' => $plugin_version_info['version'],
 
-                'order_data' => module_invoke($module, 'webwinkelkeur_get_order_data', $order)
+                'order_data' => json_encode(module_invoke($module, 'webwinkelkeur_get_order_data', $order))
             );
 
             if($invite_type == 2)
@@ -124,8 +124,7 @@ function webwinkelkeur_cron() {
             $responses[] = array('id' => $order->order_id, 'sent' => $sent);
         }
 
-        $fn = $module . '_webwinkelkeur_invites_update';
-        $fn($responses);
+        module_invoke($module, 'webwinkelkeur_invites_update', $responses);
     }
 }
 
