@@ -76,28 +76,37 @@ function webwinkelkeur_cron() {
 
         foreach($orders as $order) {
             $parameters = array(
-                'id'        => $shopid,
-                'password'  => $apikey,
+                'id'   => $shopid,
+                'code' => $apikey
+            );
+            $post = array(
                 'email'     => $order->mail,
                 'order'     => $order->order_id,
                 'delay'     => $invite_delay,
-                'lang'      => $language->language,
-                'customername' => $order->customername,
-                'client'    => 'drupal-' . VERSION,
+                'language'      => $language->language,
+                'customer_name'  => $order->customer_name,
+                'client'        => 'drupal-' . VERSION,
             );
 
             if($invite_type == 2)
-                $parameters['noremail'] = '1';
+                $post['max_invitations_per_email'] = '1';
 
-            $url = 'http://www.webwinkelkeur.nl/api.php?' . http_build_query($parameters);
-            $r = @file_get_contents($url);
+            $url = 'https://dashboard.webwinkelkeur.nl/api/1.0/invitations.json?' . http_build_query($parameters);
+            $ch = curl_init($url);
+            curl_setopt_array($ch, array(
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => http_build_query($post),
+                CURLOPT_SSL_VERIFYPEER => false
+            ));
+            $r = curl_exec($ch);
+            curl_close($ch);
 
-            $sent = false;
-
-            if(preg_match('|^Success:|', $r) || preg_match('|invite already sent|', $r)) {
+            $result = @json_decode($r);
+            if (is_object($result) && isset ($result->status) && $result->status == 'success') {
                 $sent = true;
-            }
-            else {
+            } else {
+                $sent = false;
                 watchdog('webwinkelkeur', "%response<br>\n(%url)", array(
                     '%url' => $url, '%response' => $r
                 ));

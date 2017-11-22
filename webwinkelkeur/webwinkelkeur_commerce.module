@@ -14,7 +14,7 @@ function webwinkelkeur_commerce_menu() {
 
 function webwinkelkeur_commerce_webwinkelkeur_invites() {
     $query = '
-        SELECT o.order_id, o.mail, a.commerce_customer_address_name_line as customername
+        SELECT o.order_id, o.mail, a.commerce_customer_address_name_line as customer_name
         FROM {commerce_order} o
         LEFT JOIN {field_data_commerce_customer_address} a ON o.order_id = a.entity_id
             AND a.entity_type = \'commerce_customer_profile\'
