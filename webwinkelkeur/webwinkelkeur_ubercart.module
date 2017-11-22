@@ -29,19 +29,16 @@ function webwinkelkeur_ubercart_webwinkelkeur_invites() {
 
 function webwinkelkeur_ubercart_webwinkelkeur_invites_update($orders) {
     foreach($orders as $order) {
+        $fields = array('webwinkelkeur_invite_time' => time());
+        if ($order['sent']) {
+            $fields['webwinkelkeur_invite_sent'] = 1;
+        }
         db_update('uc_orders')
-            ->fields(array('webwinkelkeur_invite_time' => time()))
+            ->fields($fields)
             ->expression('webwinkelkeur_invite_tries', 'webwinkelkeur_invite_tries + 1')
             ->condition('order_id', $order['id'])
             ->execute()
         ;
-
-        if($order['sent'])
-            db_update('uc_orders')
-                ->fields(array('webwinkelkeur_invite_sent' => 1))
-                ->condition('order_id', $order['id'])
-                ->execute()
-            ;
     }
 }
 
