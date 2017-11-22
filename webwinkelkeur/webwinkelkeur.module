@@ -63,12 +63,15 @@ function webwinkelkeur_cron() {
     if(empty($shopid) || empty($apikey))
         return;
 
-    foreach(module_implements('webwinkelkeur_invites') as $module) {
-        $orders = module_invoke($module, 'webwinkelkeur_invites');
+    $plugin_version_info = system_get_info('module', 'webwinkelkeur');
 
+    foreach(module_implements('webwinkelkeur_invites') as $module) {
+
+        $orders = module_invoke($module, 'webwinkelkeur_invites');
         if($orders->rowCount() == 0)
             continue;
 
+        $platform_version_cb = $module . '_webwinkelkeur_get_platform_version';
         $invite_type = variable_get('webwinkelkeur_invite_type', 1);
         $invite_delay = (int) variable_get('webwinkelkeur_invite_delay', 0);
 
@@ -86,6 +89,8 @@ function webwinkelkeur_cron() {
                 'language'      => $language->language,
                 'customer_name'  => $order->customer_name,
                 'client'        => 'drupal-' . VERSION,
+                'platform_version' => 'd-' . VERSION . '-' . $platform_version_cb(),
+                'plugin_version' => $plugin_version_info['version']
             );
 
             if($invite_type == 2)

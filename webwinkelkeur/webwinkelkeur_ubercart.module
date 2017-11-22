@@ -45,3 +45,8 @@ function webwinkelkeur_ubercart_webwinkelkeur_invites_update($orders) {
     }
 }
 
+function webwinkelkeur_ubercart_webwinkelkeur_get_platform_version() {
+    $ubercart_info = system_get_info('module', 'uc_store');
+    return 'uc-' . $ubercart_info['version'];
+}
+
