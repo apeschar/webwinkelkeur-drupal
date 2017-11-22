@@ -14,7 +14,7 @@ function webwinkelkeur_ubercart_menu() {
 
 function webwinkelkeur_ubercart_webwinkelkeur_invites() {
     $query = '
-        SELECT order_id, primary_email as mail, CONCAT(billing_first_name, \' \', billing_last_name) as customer_name
+        SELECT *
         FROM {uc_orders}
         WHERE webwinkelkeur_invite_sent = 0
             AND webwinkelkeur_invite_tries < 10
@@ -48,5 +48,21 @@ function webwinkelkeur_ubercart_webwinkelkeur_invites_update($orders) {
 function webwinkelkeur_ubercart_webwinkelkeur_get_platform_version() {
     $ubercart_info = system_get_info('module', 'uc_store');
     return 'uc-' . $ubercart_info['version'];
+}
+
+function webwinkelkeur_ubercart_webwinkelkeur_get_order_id($order) {
+    return $order->order_id;
+}
+
+function webwinkelkeur_ubercart_webwinkelkeur_get_order_email($order) {
+    return $order->primary_email;
+}
+
+function webwinkelkeur_ubercart_webwinkelkeur_get_order_customer_name($order) {
+    return $order->billing_first_name . ' ' . $order->billing_last_name;
+}
+
+function webwinkelkeur_ubercart_webwinkelkeur_get_order_phone_numbers($order) {
+    return array_unique(array_filter(array($order->billing_phone, $order->delivery_phone)));
 }
 

@@ -71,7 +71,6 @@ function webwinkelkeur_cron() {
         if($orders->rowCount() == 0)
             continue;
 
-        $platform_version_cb = $module . '_webwinkelkeur_get_platform_version';
         $invite_type = variable_get('webwinkelkeur_invite_type', 1);
         $invite_delay = (int) variable_get('webwinkelkeur_invite_delay', 0);
 
@@ -83,18 +82,23 @@ function webwinkelkeur_cron() {
                 'code' => $apikey
             );
             $post = array(
-                'email'     => $order->mail,
-                'order'     => $order->order_id,
-                'delay'     => $invite_delay,
-                'language'      => $language->language,
-                'customer_name'  => $order->customer_name,
-                'client'        => 'drupal-' . VERSION,
-                'platform_version' => 'd-' . VERSION . '-' . $platform_version_cb(),
+                'email'         => module_invoke($module, 'webwinkelkeur_get_order_email', $order),
+                'order'         => module_invoke($module, 'webwinkelkeur_get_order_id', $order),
+                'customer_name' => module_invoke($module, 'webwinkelkeur_get_order_customer_name', $order),
+                'phone_numbers' => module_invoke($module, 'webwinkelkeur_get_order_phone_numbers', $order),
+
+                'delay'    => $invite_delay,
+                'language' => $language->language,
+
+                'client'   => 'drupal-' . VERSION,
+                'platform_version' => 'd-' . VERSION
+                    . '-' . module_invoke($module, 'webwinkelkeur_get_platform_version'),
                 'plugin_version' => $plugin_version_info['version']
             );
 
             if($invite_type == 2)
                 $post['max_invitations_per_email'] = '1';
+
 
             $url = 'https://dashboard.webwinkelkeur.nl/api/1.0/invitations.json?' . http_build_query($parameters);
             $ch = curl_init($url);
