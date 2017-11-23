@@ -115,19 +115,22 @@ function webwinkelkeur_cron() {
             $r = curl_exec($ch);
             curl_close($ch);
 
-            $result = @json_decode($r);
-            if (is_object($result) && isset ($result->status) && $result->status == 'success') {
-                $sent = true;
-            } else {
-                $sent = false;
+            $sent = _webwinkelkeur_is_invitation_sent($r);
+            $responses[] = array('id' => $post['order'], 'sent' => $sent);
+            if (!$sent) {
                 watchdog('webwinkelkeur', "%response<br>\n(%url)", array(
                     '%url' => $url, '%response' => $r
                 ));
             }
-            $responses[] = array('id' => $post['order'], 'sent' => $sent);
         }
 
         module_invoke($module, 'webwinkelkeur_invites_update', $responses);
     }
+}
+
+function _webwinkelkeur_is_invitation_sent($response) {
+    $result = @json_decode($response);
+    return    is_object($result) && isset ($result->status)
+           && ($result->status == 'success' || strpos($result->message, 'already sent') !== false);
 }
 
