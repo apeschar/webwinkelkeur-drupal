@@ -81,10 +81,10 @@ function webwinkelkeur_ubercart_webwinkelkeur_get_order_data($order) {
         $order_info->order_lines[] = $item;
     }
 
-    $products = [];
+    $products = array();
     foreach ($product_node_ids as $node_id) {
         $node = node_load($node_id);
-        $node->image_urls = [];
+        $node->image_urls = array();
 
         $images_arr = isset ($node->uc_product_image[$node->language])
             ? $node->uc_product_image[$node->language] : $node->uc_product_image;
@@ -97,13 +97,13 @@ function webwinkelkeur_ubercart_webwinkelkeur_get_order_data($order) {
     $customer = user_load($order->uid);
     unset ($customer->pass);
 
-    $order_data = [
+    $order_data = array(
         'order' => $order_info,
         'products' => $products,
         'customer' => $customer,
-        'invoice_address' => [],
-        'delivery_address' => []
-    ];
+        'invoice_address' => array(),
+        'delivery_address' => array()
+    );
 
     $addresses = array(
         'invoice_address'  => 'billing_',
