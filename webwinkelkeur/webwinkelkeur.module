@@ -68,7 +68,7 @@ function webwinkelkeur_cron() {
     foreach(module_implements('webwinkelkeur_invites') as $module) {
 
         $orders = module_invoke($module, 'webwinkelkeur_invites');
-        if($orders->rowCount() == 0)
+        if(count($orders) == 0)
             continue;
 
         $invite_type = variable_get('webwinkelkeur_invite_type', 1);
@@ -83,8 +83,8 @@ function webwinkelkeur_cron() {
                 'code' => $apikey
             );
             $post = array(
-                'email'         => module_invoke($module, 'webwinkelkeur_get_order_email', $order),
                 'order'         => module_invoke($module, 'webwinkelkeur_get_order_id', $order),
+                'email'         => module_invoke($module, 'webwinkelkeur_get_order_email', $order),
                 'customer_name' => module_invoke($module, 'webwinkelkeur_get_order_customer_name', $order),
                 'phone_numbers' => module_invoke($module, 'webwinkelkeur_get_order_phone_numbers', $order),
 
@@ -103,7 +103,6 @@ function webwinkelkeur_cron() {
             if ($with_order_data) {
                 $post['order_data'] = json_encode(module_invoke($module, 'webwinkelkeur_get_order_data', $order));
             }
-
 
             $url = 'https://dashboard.webwinkelkeur.nl/api/1.0/invitations.json?' . http_build_query($parameters);
             $ch = curl_init($url);
@@ -125,7 +124,7 @@ function webwinkelkeur_cron() {
                     '%url' => $url, '%response' => $r
                 ));
             }
-            $responses[] = array('id' => $order->order_id, 'sent' => $sent);
+            $responses[] = array('id' => $post['order'], 'sent' => $sent);
         }
 
         module_invoke($module, 'webwinkelkeur_invites_update', $responses);

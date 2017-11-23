@@ -14,38 +14,140 @@ function webwinkelkeur_commerce_menu() {
 
 function webwinkelkeur_commerce_webwinkelkeur_invites() {
     $query = '
-        SELECT o.order_id, o.mail, a.commerce_customer_address_name_line as customer_name
-        FROM {commerce_order} o
-        LEFT JOIN {field_data_commerce_customer_address} a ON o.order_id = a.entity_id
-            AND a.entity_type = \'commerce_customer_profile\'
-            AND a.deleted = 0
-        WHERE o.webwinkelkeur_invite_sent = 0
-            AND o.webwinkelkeur_invite_tries < 10
-            AND o.webwinkelkeur_invite_time < :wwk_time
+        SELECT order_id
+        FROM {commerce_order}
+        WHERE webwinkelkeur_invite_sent = 0
+            AND webwinkelkeur_invite_tries < 10
+            AND webwinkelkeur_invite_time < :wwk_time
     ';
 
     if(variable_get('webwinkelkeur_invite_completed_only', true))
-        $query .= "AND o.status = 'completed'";
+        $query .= " AND status = 'completed'";
 
-    $query .= ' GROUP BY o.order_id';
-
-    return db_query($query, array('wwk_time' => time() - 1800));
+    $orders = array();
+    foreach (db_query($query, array('wwk_time' => time() - 1800)) as $order) {
+        $orders[] = entity_metadata_wrapper('commerce_order', commerce_order_load($order->order_id));
+    }
+    return $orders;
 }
 
 function webwinkelkeur_commerce_webwinkelkeur_invites_update($orders) {
     foreach($orders as $order) {
+        $fields = array('webwinkelkeur_invite_time' => time());
+        if ($order['sent']) {
+            $fields['webwinkelkeur_invite_sent'] = 1;
+        }
         db_update('commerce_order')
-            ->fields(array('webwinkelkeur_invite_time' => time()))
+            ->fields($fields)
             ->expression('webwinkelkeur_invite_tries', 'webwinkelkeur_invite_tries + 1')
             ->condition('order_id', $order['id'])
             ->execute()
         ;
-        if($order['sent'])
-            db_update('commerce_order')
-                ->fields(array('webwinkelkeur_invite_sent' => 1))
-                ->condition('order_id', $order['id'])
-                ->execute()
-            ;
     }
 }
 
+function webwinkelkeur_commerce_webwinkelkeur_get_platform_version() {
+    $commerce_info = system_get_info('module', 'commerce');
+    return 'dc-' . $commerce_info['version'];
+}
+
+function webwinkelkeur_commerce_webwinkelkeur_get_order_id(EntityDrupalWrapper $order) {
+    return $order->order_id->value();
+}
+
+function webwinkelkeur_commerce_webwinkelkeur_get_order_email($order) {
+    return $order->mail->value();
+}
+
+function webwinkelkeur_commerce_webwinkelkeur_get_order_customer_name($order) {
+    $billing_address = $order->commerce_customer_billing->commerce_customer_address->value();
+    return $billing_address['first_name'] . ' ' . $billing_address['last_name'];
+}
+
+function webwinkelkeur_commerce_webwinkelkeur_get_order_phone_numbers($order) {
+    return array();
+}
+
+function webwinkelkeur_commerce_webwinkelkeur_get_order_data($order) {
+    $vars = array(
+        'order_id',
+        'order_number',
+        'status',
+        'state',
+        'type'
+    );
+    $order_info = array();
+    foreach ($vars as $var) {
+        $order_info[$var] = $order->$var->value();
+    }
+    foreach (array('commerce_order_total', 'commerce_discounts') as $complex) {
+        $order_info[$complex] = _webwinkelkeur_commerce_dump_wrapper($order->$complex, 5);
+    }
+    $order_info['order_lines'] = array();
+    $products = array();
+
+    $line_item_props = array(
+        'commerce_unit_price',
+        'commerce_total',
+        'type',
+        'line_item_label',
+        'quantity'
+    );
+    foreach ($order->commerce_line_items->getIterator() as $line_item) {
+        $line = array();
+        foreach ($line_item_props as $prop) {
+            $line[$prop] = _webwinkelkeur_commerce_dump_wrapper($line_item->$prop, 2);
+        }
+        if ($line_item->type->value() == 'product') {
+            $line['product_id'] = $line_item->commerce_product->product_id->value();
+            $product = _webwinkelkeur_commerce_dump_wrapper($line_item->commerce_product, 2);
+            $product['image_urls'] = array();
+            foreach ($product['field_images'] as $field_image) {
+                $product['image_urls'][] = file_create_url($field_image['uri']);
+            }
+            $products[] = $product;
+        }
+        $order_info['order_lines'][] = $line;
+    }
+
+    $order_data = array(
+        'order' => $order_info,
+        'products' => $products,
+        'customer' => _webwinkelkeur_commerce_dump_wrapper($order->owner, 1),
+        'invoice_address' => $order->commerce_customer_billing->commerce_customer_address->value(),
+        'delivery_address' => $order->commerce_customer_shipping->commerce_customer_address->value()
+    );
+
+    return $order_data;
+}
+
+function _webwinkelkeur_commerce_dump_wrapper(EntityMetadataWrapper $wrapper, $max_depth, $depth = 0) {
+    $return_value = $depth == $max_depth
+                    || (
+                            !method_exists($wrapper, 'getIterator')
+                         && !method_exists($wrapper, 'getPropertyInfo')
+                    );
+    if ($return_value) {
+        return $wrapper->value();
+    }
+
+    $items = array();
+    if (method_exists($wrapper, 'getPropertyInfo')) {
+        foreach (array_keys($wrapper->getPropertyInfo()) as $prop) {
+            $items[$prop] = $wrapper->$prop;
+        }
+    } else {
+        foreach ($wrapper->getIterator() as $item) {
+            $items[] = $item;
+        }
+    }
+    $values = array();
+    foreach ($items as $key => $item) {
+        try {
+            $values[$key] = _webwinkelkeur_commerce_dump_wrapper($item, $max_depth, $depth + 1);
+        } catch (Exception $e) {
+            $values[$key] = null;
+        }
+    }
+    return $values;
+}

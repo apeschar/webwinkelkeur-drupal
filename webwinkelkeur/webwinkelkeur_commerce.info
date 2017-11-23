@@ -3,6 +3,7 @@ description = Sends invites to customers after placing an order in Drupal Commer
 core = 7.x
 package = WebwinkelKeur
 files[] = webwinkelkeur_commerce.module
+dependencies[] = entity
 dependencies[] = webwinkelkeur
 dependencies[] = commerce (>=7.x-1.11)
 configure = admin/config/webwinkelkeur/invites
