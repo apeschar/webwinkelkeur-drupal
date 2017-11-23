@@ -52,15 +52,19 @@ function webwinkelkeur_commerce_webwinkelkeur_get_platform_version() {
 }
 
 function webwinkelkeur_commerce_webwinkelkeur_get_order_id(EntityDrupalWrapper $order) {
-    return $order->order_id->value();
+    return _webwinkelkeur_commerce_get_wrapper_value($order->order_id);
 }
 
 function webwinkelkeur_commerce_webwinkelkeur_get_order_email($order) {
-    return $order->mail->value();
+    return _webwinkelkeur_commerce_get_wrapper_value($order->mail);
 }
 
 function webwinkelkeur_commerce_webwinkelkeur_get_order_customer_name($order) {
-    $billing_address = $order->commerce_customer_billing->commerce_customer_address->value();
+    try {
+        $billing_address = $order->commerce_customer_billing->commerce_customer_address->value();
+    } catch (Exception $e) {
+        return '';
+    }
     return $billing_address['first_name'] . ' ' . $billing_address['last_name'];
 }
 
@@ -78,7 +82,7 @@ function webwinkelkeur_commerce_webwinkelkeur_get_order_data($order) {
     );
     $order_info = array();
     foreach ($vars as $var) {
-        $order_info[$var] = $order->$var->value();
+        $order_info[$var] = _webwinkelkeur_commerce_get_wrapper_value($order->$var);
     }
     foreach (array('commerce_order_total', 'commerce_discounts') as $complex) {
         $order_info[$complex] = _webwinkelkeur_commerce_dump_wrapper($order->$complex, 5);
@@ -98,25 +102,33 @@ function webwinkelkeur_commerce_webwinkelkeur_get_order_data($order) {
         foreach ($line_item_props as $prop) {
             $line[$prop] = _webwinkelkeur_commerce_dump_wrapper($line_item->$prop, 2);
         }
-        if ($line_item->type->value() == 'product') {
-            $line['product_id'] = $line_item->commerce_product->product_id->value();
-            $product = _webwinkelkeur_commerce_dump_wrapper($line_item->commerce_product, 2);
-            $product['image_urls'] = array();
-            foreach ($product['field_images'] as $field_image) {
-                $product['image_urls'][] = file_create_url($field_image['uri']);
+
+        try {
+            if ($line_item->type->value() == 'product') {
+                $line['product_id'] = $line_item->commerce_product->product_id->value();
+                $product = _webwinkelkeur_commerce_dump_wrapper($line_item->commerce_product, 2);
+                $product['image_urls'] = array();
+                foreach ($product['field_images'] as $field_image) {
+                    $product['image_urls'][] = file_create_url($field_image['uri']);
+                }
+                $products[] = $product;
             }
-            $products[] = $product;
-        }
-        $order_info['order_lines'][] = $line;
+            $order_info['order_lines'][] = $line;
+        } catch (Exception $e) {}
     }
 
     $order_data = array(
         'order' => $order_info,
         'products' => $products,
-        'customer' => _webwinkelkeur_commerce_dump_wrapper($order->owner, 1),
-        'invoice_address' => $order->commerce_customer_billing->commerce_customer_address->value(),
-        'delivery_address' => $order->commerce_customer_shipping->commerce_customer_address->value()
+        'customer' => _webwinkelkeur_commerce_dump_wrapper($order->owner, 1)
     );
+
+    try {
+        $order_data['invoice_address']  = $order->commerce_customer_billing->commerce_customer_address->value();
+    } catch (Exception $e) {}
+    try {
+        $order_data['delivery_address'] = $order->commerce_customer_shipping->commerce_customer_address->value();
+    } catch (Exception $e) {}
 
     return $order_data;
 }
@@ -128,7 +140,7 @@ function _webwinkelkeur_commerce_dump_wrapper(EntityMetadataWrapper $wrapper, $m
                          && !method_exists($wrapper, 'getPropertyInfo')
                     );
     if ($return_value) {
-        return $wrapper->value();
+        return _webwinkelkeur_commerce_get_wrapper_value($wrapper);
     }
 
     $items = array();
@@ -150,4 +162,10 @@ function _webwinkelkeur_commerce_dump_wrapper(EntityMetadataWrapper $wrapper, $m
         }
     }
     return $values;
+}
+
+function _webwinkelkeur_commerce_get_wrapper_value(EntityMetadataWrapper $wrapper) {
+    try {
+        return $wrapper->value();
+    } catch (Exception $e) {}
 }
