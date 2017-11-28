@@ -105,15 +105,9 @@ function webwinkelkeur_cron() {
             }
 
             $url = 'https://dashboard.webwinkelkeur.nl/api/1.0/invitations.json?' . http_build_query($parameters);
-            $ch = curl_init($url);
-            curl_setopt_array($ch, array(
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => http_build_query($post),
-                CURLOPT_SSL_VERIFYPEER => false
-            ));
-            $r = curl_exec($ch);
-            curl_close($ch);
+            require_once dirname(__FILE__) . '/Peschar_URLRetriever.php';
+            $retriever = new Peschar_URLRetriever();
+            $r = $retriever->retrieve($url, $post);
 
             $sent = _webwinkelkeur_is_invitation_sent($r);
             $responses[] = array('id' => $post['order'], 'sent' => $sent);
