@@ -72,6 +72,10 @@ function webwinkelkeur_commerce_webwinkelkeur_get_order_phone_numbers($order) {
     return array();
 }
 
+function webwinkelkeur_commerce_webwinkelkeur_get_order_total($order) {
+    return _webwinkelkeur_commerce_get_wrapper_value($order->commerce_order_total->amount_decimal);
+}
+
 function webwinkelkeur_commerce_webwinkelkeur_get_order_data($order) {
     $vars = array(
         'order_id',

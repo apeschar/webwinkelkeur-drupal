@@ -87,6 +87,7 @@ function webwinkelkeur_cron() {
                 'email'         => module_invoke($module, 'webwinkelkeur_get_order_email', $order),
                 'customer_name' => module_invoke($module, 'webwinkelkeur_get_order_customer_name', $order),
                 'phone_numbers' => module_invoke($module, 'webwinkelkeur_get_order_phone_numbers', $order),
+                'order_total'   => module_invoke($module, 'webwinkelkeur_get_order_total', $order),
 
                 'delay'    => $invite_delay,
                 'language' => $language->language,

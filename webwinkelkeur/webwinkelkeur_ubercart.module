@@ -63,6 +63,10 @@ function webwinkelkeur_ubercart_webwinkelkeur_get_order_phone_numbers($order) {
     return array_unique(array_filter(array($order->billing_phone, $order->delivery_phone)));
 }
 
+function webwinkelkeur_ubercart_webwinkelkeur_get_order_total($order) {
+    return $order->order_total;
+}
+
 function webwinkelkeur_ubercart_webwinkelkeur_get_order_data($order) {
     $order_info = clone $order;
     $order_info->order_lines = array();
